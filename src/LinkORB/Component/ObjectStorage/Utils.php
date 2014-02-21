@@ -5,6 +5,8 @@ namespace LinkORB\Component\ObjectStorage;
 use LinkORB\Component\ObjectStorage\Client;
 use Aws\S3\S3Client;
 use RuntimeException;
+use InvalidArgumentException;
+use MongoClient;
 
 class Utils
 {
@@ -60,6 +62,23 @@ class Utils
             case "file":
                 $path = $config['file']['path'];
                 $driver = new $driverclassname($path);
+                break;
+            case "gridfs":
+                $server = (string)$config['gridfs']['server'];
+                if (trim($server)=='') {
+                    $server = 'mongodb://localhost:27017';
+                }
+
+
+                $dbname = (string)$config['gridfs']['dbname'];
+                if (trim($dbname)=='') {
+                    throw new InvalidArgumentException("No dbname specified for gridfs client");
+                }
+
+                $mongoclient = new MongoClient($server);
+                $db = $mongoclient->selectDB($dbname);
+                $grid = $db->getGridFS();
+                $driver = new $driverclassname($grid);
                 break;
             default:
                 throw new RuntimeException("Unsupported driver: " . $drivername);

@@ -105,11 +105,12 @@ This repository contains a file called `objectstorage.conf.dist` which you can u
 * PSR-0 compatible, works with composer and is registered on packagist.org
 * Supports Amazon S3 (`S3Driver`)
 * Supports File systems (`FileDriver`)
+* Supports MongoDB GridFS (`GridFs`) 
 * Comes with command line utility for testing and introspection
 
 ## Todo
 
-* Add support for more backends (GridFS, Riak CS, PDO)
+* Add support for more backends (PDO, Riak CS)
 * Add support for client-side encryption
 * Add support for key-listing by prefix (on selected drivers only)
 

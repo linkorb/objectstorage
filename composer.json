@@ -2,7 +2,7 @@
     "name": "linkorb/objectstorage",
     "description": "ObjectStorage library for your cloud-based applications",
     "homepage": "http://www.github.com/linkorb/objectstorage",
-    "keywords": ["objectstorage", "osd", "objectstore", "s3", "gridfs", "storage", "cloud storage"],
+    "keywords": ["objectstorage", "osd", "objectstore", "s3", "gridfs", "mongodb", "storage", "cloud storage"],
     "type": "library",
     "authors": [
         {
