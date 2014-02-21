@@ -1,6 +1,6 @@
 {
     "name": "linkorb/objectstorage",
-    "description": "ObjectStorage library for storing files in various backend systems by key",
+    "description": "ObjectStorage library for your cloud-based applications",
     "homepage": "http://www.github.com/linkorb/objectstorage",
     "keywords": ["objectstorage", "osd", "objectstore", "s3", "gridfs", "storage", "cloud storage"],
     "type": "library",
