@@ -1,0 +1,25 @@
+{
+    "name": "linkorb/objectstorage",
+    "description": "ObjectStorage library for storing files in various backend systems by key",
+    "homepage": "http://www.github.com/linkorb/objectstorage",
+    "keywords": ["objectstorage", "osd", "objectstore", "s3", "gridfs", "storage", "cloud storage"],
+    "type": "library",
+    "authors": [
+        {
+            "name": "Joost Faassen",
+            "email": "j.faassen@linkorb.com",
+    	    "role": "Development"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "symfony/console": "2.4.*@dev",
+        "aws/aws-sdk-php": "*"
+    },
+    "autoload": {
+	"psr-0": {
+	    "LinkORB\\Component\\ObjectStorage\\": "src/"
+	} 
+    },
+    "license": "MIT"
+}

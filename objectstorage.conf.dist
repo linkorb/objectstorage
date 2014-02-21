@@ -1,0 +1,18 @@
+; This is a template config file for distribution
+;
+; 1) Copy this file to `objectstorage.conf` 
+; 2) Edit the file to add your own credentials
+; 3) Use the cli tool (`bin/console`) without specifying a --config flag, it will be auto-detected
+
+
+[general]
+; Select one of the available drivers: S3, File
+driver = S3
+
+[s3]
+key = my_s3_key
+secret = my_s3_secret
+bucketname = my_bucket_name
+
+[file]
+path = "/my/objectstorage/path"
