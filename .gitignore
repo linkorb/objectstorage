@@ -1,5 +1,8 @@
 # Created by http://www.gitignore.io
 
+.DS_Store
+objectstorage.conf
+
 ### Eclipse ###
 *.pydevproject
 .metadata
