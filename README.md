@@ -14,18 +14,19 @@ File-systems are usually accessible by one server at a time.
 This can be solved by exposing the file system over a network share using technologies like NFS, SMB, etc.
 These sharing technologies have a set of limitations when applied to large-scale applications:
 
-* Limited scalablity: You can mount an NFS share from a small set of servers, it is not intended for large amounts of clients
-* Single point of failure: When your NFS server fails, all your app-servers lose access to all the data
-* Scale up, instead of scale out: The amount of storage, and the performance, are limited to a single machine. You can buy a bigger machine, but you can't buy more machines to distribute the load (no partitioning)
+* **Limited scalablity**: You can mount an NFS share from a small set of servers, it is not intended for large amounts of clients
+* **Single point of failure**: When your NFS server fails, all your app-servers lose access to all the data
+* **Scale up, instead of scale out**: The amount of storage, and the performance, are limited to a single machine. You can buy a bigger machine, but you can't buy more machines to distribute the load (no partitioning)
 
 ### Benefits of object based storage
 
 Object based storage works differently: it does not support directories, filenames, etc.
 It simply stores raw 'data', by a 'key'. To store data in object storage, you write to a key. To read it back, you read from the key. There are no real 'filenames', or 'directories'. This level of abstraction brings you a set of benefits:
 
-* Transparant partitioning: You can easily partition the data by key.
-* Scalability: you can access the data from as many application servers, without any of those servers having to mount a file-system. It's accessed as a network service.
-* Flexible: As the interface to Object Storage is much simpler (get/set keys) than file system interfaces (read/write/copy/rename/mkdir/ls/rmdir/etc), it is easier to implement with different back-ends.
+* **Transparant partitioning**: You can easily partition the data by key.
+* **Scalability**: you can access the data from as many application servers, without any of those servers having to mount a file-system. It's accessed as a network service.
+* **Simple**: As the interface to Object Storage is much simpler (get/set keys) than file system interfaces (read/write/copy/rename/mkdir/ls/rmdir/etc)
+* **Flexible**: Because of it's simplicity, it is easier to implement with different physical storage back-ends.
 
 Specific implementations may offer further benefits, such as 'redundancy', 'caching', etc.
 
@@ -67,6 +68,7 @@ echo $text; // Outputs "Hello world!";
 
 // Delete the message from object storage
 $client->delete('my-message');
+```
 
 
 ## Console tool
@@ -108,6 +110,8 @@ This repository contains a file called `objectstorage.conf.dist` which you can u
 ## Todo
 
 * Add support for more backends (GridFS, Riak CS, PDO)
+* Add support for client-side encryption
+* Add support for key-listing by prefix (on selected drivers only)
 
 ## Installing
 
