@@ -36,10 +36,11 @@ This library implements a `Client`, that can use various `Drivers` to access dif
 
 Currently the following drivers are supported:
 
-* S3: Store your objects in Amazon S3
-* File: Store your objects in a local filesystem (for debugging)
+* **S3**: Store your objects in Amazon S3
+* **GridFs**: Store your objects in MongoDB GridFS
+* **File**: Store your objects in a local filesystem (for debugging)
 
-To create your own driver, simply create a class that implements a very simple `DriverInterface`. We intend to add support for GridFS, PDO and more.
+To create your own driver, simply create a class that implements a very simple `DriverInterface`. We intend to add support for PDO, Riak CS, Google Cloud Storage and more.
 
 ### Example usage:
 
@@ -103,10 +104,11 @@ This repository contains a file called `objectstorage.conf.dist` which you can u
 ## Features
 
 * PSR-0 compatible, works with composer and is registered on packagist.org
+* PSR-1 and PSR-2 level coding style
 * Supports Amazon S3 (`S3Driver`)
 * Supports File systems (`FileDriver`)
 * Supports MongoDB GridFS (`GridFs`) 
-* Comes with command line utility for testing and introspection
+* Included with command line utility for testing and introspection
 
 ## Todo
 
@@ -135,7 +137,6 @@ Go ahead and fork/clone this repo and we're looking forward to your pull request
 
 If you are unable to implement changes you like yourself, don't hesitate to
 open a new issue report so that we or others may take care of it.
-
 
 ## License
 
