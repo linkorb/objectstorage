@@ -1,6 +1,6 @@
 # ObjectStorage library
 
-Use this library to support object storage in your applications
+ObjectStorage library for your cloud-based applications.
 
 ## Object Storage vs a normal file system
 
