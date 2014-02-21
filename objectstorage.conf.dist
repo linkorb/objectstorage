@@ -6,8 +6,8 @@
 
 
 [general]
-; Select one of the available drivers: S3, File
-driver = S3
+; Select one of the available drivers: s3, file, gridfs, pdo
+driver = file
 
 [s3]
 key = my_s3_key
@@ -16,3 +16,15 @@ bucketname = my_bucket_name
 
 [file]
 path = "/my/objectstorage/path"
+
+[gridfs]
+dbname = osd
+server = "mongodb://localhost:27017"
+
+[pdo]
+; Initialize your database with this sql:
+; CREATE TABLE objectstorage (objectkey varchar(255), objectdata text, PRIMARY KEY (objectkey));
+dsn = "mysql:dbname=mydbname;host=127.0.0.1"
+username = db_user
+password = db_pass
+tablename = objectstorage

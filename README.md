@@ -38,15 +38,18 @@ Currently the following drivers are supported:
 
 * **S3**: Store your objects in Amazon S3
 * **GridFs**: Store your objects in MongoDB GridFS
+* **PDO**: Store your objects in a relational database (for debugging)
 * **File**: Store your objects in a local filesystem (for debugging)
 
-To create your own driver, simply create a class that implements a very simple `DriverInterface`. We intend to add support for PDO, Riak CS, Google Cloud Storage and more.
+To create your own driver, simply create a class that implements a very simple `DriverInterface`. We intend to add support for Riak CS, Google Cloud Storage and more.
 
 ### Example usage:
 
 ```php
-$driver = new LinkORB\Component\ObjectStorage\Driver\S3Driver($s3client);
+// Instantiate a driver of your choice (file, s3, gridfs, pdo, etc...)
+$driver = new LinkORB\Component\ObjectStorage\Driver\PdoDriver($pdo);
 
+// Instantiate an ObjectStorage Client that uses the driver instance
 $client = new LinkORB\Component\ObjectStorage\Client($driver);
 
 // Upload a local png into object storage
@@ -70,7 +73,6 @@ echo $text; // Outputs "Hello world!";
 // Delete the message from object storage
 $client->delete('my-message');
 ```
-
 
 ## Console tool
 
@@ -106,13 +108,14 @@ This repository contains a file called `objectstorage.conf.dist` which you can u
 * PSR-0 compatible, works with composer and is registered on packagist.org
 * PSR-1 and PSR-2 level coding style
 * Supports Amazon S3 (`S3Driver`)
+* Supports MongoDB GridFS (`GridFsDriver`) 
+* Supports MySQL, PostgreSQL, Oracle, SQLite, MS SQL Server, etc through PDO (`PdoDriver`) 
 * Supports File systems (`FileDriver`)
-* Supports MongoDB GridFS (`GridFs`) 
 * Included with command line utility for testing and introspection
 
-## Todo
+## Todo (Pull-requests welcome!)
 
-* Add support for more backends (PDO, Riak CS)
+* Add support for more backends (Riak CS, Google Cloud Storage, etc)
 * Add support for client-side encryption
 * Add support for key-listing by prefix (on selected drivers only)
 
