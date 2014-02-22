@@ -4,44 +4,44 @@ ObjectStorage library for your cloud-based applications.
 
 ## Object Storage vs a normal file system
 
-Object based storage solves large scale storage problems for cloud-based applications.
+Object-based storage solves large scale storage problems for cloud-based applications.
 
-It provides a simple alternative to regular file system based storage.
+It provides a simple alternative to regular filesystem-based storage.
 
-### Problems of file system based storage
+### Problems of filesystem-based storage
 
-File-systems are usually accessible by one server at a time.
-This can be solved by exposing the file system over a network share using technologies like NFS, SMB, etc.
+Filesystems are usually accessible by one server at a time.
+This can be solved by exposing the filesystem over a network share using technologies like NFS, SMB, etc.
 These sharing technologies have a set of limitations when applied to large-scale applications:
 
 * **Limited scalablity**: You can mount an NFS share from a small set of servers, it is not intended for large amounts of clients
-* **Single point of failure**: When your NFS server fails, all your app-servers lose access to all the data
+* **Single point of failure**: When your NFS server fails, *all* your app-servers lose access to *all* of the data
 * **Scale up, instead of scale out**: The amount of storage, and the performance, are limited to a single machine. You can buy a bigger machine, but you can't buy more machines to distribute the load (no partitioning)
 
-### Benefits of object based storage
+### Benefits of object-based storage
 
-Object based storage works differently: it does not support directories, filenames, etc.
-It simply stores raw 'data', by a 'key'. To store data in object storage, you write to a key. To read it back, you read from the key. There are no real 'filenames', or 'directories'. This level of abstraction brings you a set of benefits:
+Object-based storage works differently: it does not support 'directories', 'filenames', etc. It just knows about 'keys'.
+You simply store raw 'data' by a 'key'. To store data in objectstorage, you write to a key. To read it back, you read from the key. There are no real 'filenames', or 'directories'. This level of abstraction brings you a set of huge benefits:
 
-* **Transparant partitioning**: You can easily partition the data by key.
-* **Scalability**: you can access the data from as many application servers, without any of those servers having to mount a file-system. It's accessed as a network service.
-* **Simple**: As the interface to Object Storage is much simpler (get/set keys) than file system interfaces (read/write/copy/rename/mkdir/ls/rmdir/etc)
-* **Flexible**: Because of it's simplicity, it is easier to implement with different physical storage back-ends.
+* **Transparant partitioning**: You can easily partition the data by key
+* **Scalability**: you can access the data from as many application servers as you want, without any of those servers having to mount a file-system. It's accessed as a network service.
+* **Simple**: Interfacing with an objectstorage backend is much simpler (get/set keys) than file system interfaces (read/write/copy/rename/mkdir/ls/rmdir/etc)
+* **Flexible**: Because of this simplicity, it is very easy to implement new physical storage back-ends. This protects you from getting stuck with sub-optimal storage solutions.
 
 Specific implementations may offer further benefits, such as 'redundancy', 'caching', etc.
 
 ## About this library
 
-This library implements a `Client`, that can use various `Drivers` to access different back-ends.
+This library implements a "Client", that can use various "Drivers" to access different "back-ends".
 
-Currently the following drivers are supported:
+Currently the following drivers are implemented:
 
-* **S3**: Store your objects in Amazon S3
-* **GridFs**: Store your objects in MongoDB GridFS
-* **PDO**: Store your objects in a relational database (for debugging)
-* **File**: Store your objects in a local filesystem (for debugging)
+* **S3**: Store your objects in [Amazon S3](http://aws.amazon.com/s3/)
+* **GridFs**: Store your objects in [MongoDB GridFS](http://docs.mongodb.org/manual/core/gridfs/)
+* **PDO**: Store your objects in a relational database (for dev/testing/debugging)
+* **File**: Store your objects in a local filesystem (for dev/testing/debugging)
 
-To create your own driver, simply create a class that implements a very simple `DriverInterface`. We intend to add support for Riak CS, Google Cloud Storage and more.
+To create your own driver, simply create a class that implements the very simple `DriverInterface`. It is trivial to add support for Riak CS, Google Cloud Storage, etc.
 
 ### Example usage:
 
@@ -76,7 +76,7 @@ $client->delete('my-message');
 
 ## Console tool
 
-This library comes with a simple console application that uses the client.
+This library comes with a simple console application that uses the library.
 You can use it for testing and introspection.
 
 ### Example console commands:
