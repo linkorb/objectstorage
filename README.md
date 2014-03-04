@@ -141,6 +141,12 @@ Go ahead and fork/clone this repo and we're looking forward to your pull request
 If you are unable to implement changes you like yourself, don't hesitate to
 open a new issue report so that we or others may take care of it.
 
+## Brought to you by the LinkORB Engineering team
+
+Check out our other projects at [linkorb.com/engineering](http://www.linkorb.com/engineering).
+
+Btw, we're hiring!
+
 ## License
 
 Please check LICENSE.md for full license information
