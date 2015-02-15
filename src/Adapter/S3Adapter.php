@@ -8,6 +8,7 @@ class S3Adapter implements StorageAdapterInterface
 {
     private $s3client = null;
     private $bucketname = null;
+    private $defaultacl = 'public-read';
 
     public function __construct($s3client, $bucketname)
     {
@@ -32,9 +33,10 @@ class S3Adapter implements StorageAdapterInterface
     {
         $this->s3client->putObject(
             array(
-                'Bucket' => $this->bucketname, 
+                'Bucket' => $this->bucketname,
                 'Key' => $key,
-                'Body' => $data
+                'Body' => $data,
+                'ACL' => $this->defaultacl
             )
         );
     }
