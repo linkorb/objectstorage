@@ -34,46 +34,46 @@ Specific implementations may offer further benefits, such as 'redundancy', 'cach
 
 ## About this library
 
-This library implements a "Client", that can use various "Drivers" to access different "back-ends".
+This library implements a "Service", that can use various "Adapters" to access different "storage back-ends".
 
-Currently the following drivers are implemented:
+Currently the following adapters are implemented:
 
 * **S3**: Store your objects in [Amazon S3](http://aws.amazon.com/s3/)
 * **GridFs**: Store your objects in [MongoDB GridFS](http://docs.mongodb.org/manual/core/gridfs/)
 * **PDO**: Store your objects in a relational database (for dev/testing/debugging)
 * **File**: Store your objects in a local filesystem (for dev/testing/debugging)
 
-To create your own driver, simply create a class that implements the very simple `DriverInterface`. It is trivial to add support for Riak CS, Google Cloud Storage, etc.
+To create your own adapter, simply create a class that implements the very simple `StorageAdapterInterface`. It is trivial to add support for Riak CS, Google Cloud Storage, etc.
 
 ### Example usage:
 
 ```php
 // Instantiate a driver of your choice (file, s3, gridfs, pdo, etc...)
-$driver = new ObjectStorage\Adapter\PdoAdapter($pdo);
+$adapter = new ObjectStorage\Adapter\PdoAdapter($pdo);
 
-// Instantiate an ObjectStorage Client that uses the driver instance
-$client = new ObjectStorage\Client($driver);
+// Instantiate an ObjectStorage Service that uses the adapter instance
+$service = new ObjectStorage\Service($adapter);
 
 // Upload a local png into object storage
-$client->upload('my-photo', '/home/test/some_file.png');
+$service->upload('my-photo', '/home/test/some_file.png');
 
 // Download the image from object storage to a new local file
-$client->download('my-photo', '/home/test/some_file.png');
+$service->download('my-photo', '/home/test/some_file.png');
 
 // Delete the image from object storage
-$client->delete('my-photo');
+$service->delete('my-photo');
 
 $message = "Hello world!";
 
 // put the message data into object storage
-$client->set('my-message', $message);
+$service->set('my-message', $message);
 
 // read the message back from object storage
-$text = $client->get('my-message');
+$text = $service->get('my-message');
 echo $text; // Outputs "Hello world!";
 
 // Delete the message from object storage
-$client->delete('my-message');
+$service->delete('my-message');
 ```
 
 ## Console tool
