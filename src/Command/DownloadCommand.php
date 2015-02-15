@@ -41,13 +41,13 @@ class DownloadCommand extends Command
     {
         $configfilename = $input->getOption('config');
         $config = Utils::loadConfig($configfilename);
-        $client = Utils::getClientFromConfig($config);
+        $service = Utils::getServiceFromConfig($config);
 
         $filename = $input->getArgument('filename');
         $key = $input->getArgument('key');
 
         $output->writeln("Downloading key '" . $key . "' to file '" . $filename . "'");
-        $client->download($key, $filename);
+        $service->download($key, $filename);
         $output->writeln("Done");
     }
 }

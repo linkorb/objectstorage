@@ -35,12 +35,12 @@ class DeleteCommand extends Command
     {
         $configfilename = $input->getOption('config');
         $config = Utils::loadConfig($configfilename);
-        $client = Utils::getClientFromConfig($config);
+        $service = Utils::getServiceFromConfig($config);
 
         $key = $input->getArgument('key');
 
         $output->writeln("Deleting key '" . $key . "'");
-        $client->delete($key);
+        $service->delete($key);
         $output->writeln("Done");
     }
 }

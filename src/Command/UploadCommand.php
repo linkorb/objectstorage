@@ -41,13 +41,13 @@ class UploadCommand extends Command
     {
         $configfilename = $input->getOption('config');
         $config = Utils::loadConfig($configfilename);
-        $client = Utils::getClientFromConfig($config);
+        $service = Utils::getServiceFromConfig($config);
 
         $filename = $input->getArgument('filename');
         $key = $input->getArgument('key');
 
         $output->writeln("Uploading '" . $filename . "' as key '" . $key . "'");
-        $client->upload($key, $filename);
+        $service->upload($key, $filename);
         $output->writeln("Done");
     }
 }

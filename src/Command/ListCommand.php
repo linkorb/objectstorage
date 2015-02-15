@@ -34,12 +34,12 @@ class ListCommand extends Command
     {
         $configfilename = $input->getOption('config');
         $config = Utils::loadConfig($configfilename);
-        $client = Utils::getClientFromConfig($config);
+        $service = Utils::getServiceFromConfig($config);
 
         $prefix = $input->getArgument('prefix');
 
         $output->writeln("Listing keys /w prefix '" . $prefix . "'\n");
-        $keys = $client->listKeys($prefix);
+        $keys = $service->listKeys($prefix);
 
         foreach($keys as $key)
         {

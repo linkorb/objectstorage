@@ -2,7 +2,7 @@
 
 namespace ObjectStorage;
 
-use ObjectStorage\Client;
+use ObjectStorage\Service;
 use Aws\S3\S3Client;
 use RuntimeException;
 use InvalidArgumentException;
@@ -35,7 +35,7 @@ class Utils
         return $config;
     }
 
-    public static function getClientFromConfig($config)
+    public static function getServiceFromConfig($config)
     {
         $adaptername = (string)$config['general']['storageadapter'];
         $adapterclassname = 'ObjectStorage\\Adapter\\' . $adaptername . 'Adapter';
@@ -106,7 +106,7 @@ class Utils
                 break;
 
         }
-        $client = new Client($adapter);
-        return $client;
+        $service = new Service($adapter);
+        return $service;
     }
 }

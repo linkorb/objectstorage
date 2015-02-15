@@ -4,7 +4,7 @@ namespace ObjectStorage;
 
 use RuntimeException;
 
-class Client
+class Service
 {
     private $storageadapter;
     private $prefix;
