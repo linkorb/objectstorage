@@ -1,13 +1,13 @@
 <?php
 
-namespace LinkORB\Component\ObjectStorage\Command;
+namespace ObjectStorage\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LinkORB\Component\ObjectStorage\Utils;
+use ObjectStorage\Utils;
 
 class UploadCommand extends Command
 {
@@ -46,7 +46,7 @@ class UploadCommand extends Command
         $filename = $input->getArgument('filename');
         $key = $input->getArgument('key');
 
-        $output->writeln("Uploading '" . $filename . "' as key '" . $key . "'\n");
+        $output->writeln("Uploading '" . $filename . "' as key '" . $key . "'");
         $client->upload($key, $filename);
         $output->writeln("Done");
     }

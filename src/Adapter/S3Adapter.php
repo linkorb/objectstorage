@@ -1,13 +1,10 @@
 <?php
-/** 
- * This file implements the LinkORB_ObjectStore_S3 class
- */
 
-namespace LinkORB\Component\ObjectStorage\Driver;
+namespace ObjectStorage\Adapter;
 
 use InvalidArgumentException;
 
-class S3Driver implements DriverInterface
+class S3Adapter implements StorageAdapterInterface
 {
     private $s3client = null;
     private $bucketname = null;
@@ -31,7 +28,7 @@ class S3Driver implements DriverInterface
         $this->bucketname = $bucketname;
     }
     
-    public function set($key, $data)
+    public function setData($key, $data)
     {
         $this->s3client->putObject(
             array(
@@ -42,7 +39,7 @@ class S3Driver implements DriverInterface
         );
     }
 
-    public function get($key)
+    public function getData($key)
     {
         $result = $this->s3client->getObject(
             array(
@@ -53,7 +50,7 @@ class S3Driver implements DriverInterface
         return (string)$result['Body'];
     }
     
-    public function delete($key)
+    public function deleteData($key)
     {
         $this->s3client->deleteObject(
             array(

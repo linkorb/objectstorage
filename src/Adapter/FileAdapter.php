@@ -1,13 +1,11 @@
 <?php
 
-namespace LinkORB\Component\ObjectStorage\Driver;
+namespace ObjectStorage\Adapter;
 
-use LinkORB_Log;
 use RuntimeException;
 use InvalidArgumentException;
 
-
-class FileDriver implements DriverInterface
+class FileAdapter implements StorageAdapterInterface
 {
     private $path = null;
     public $type = null;
@@ -25,14 +23,14 @@ class FileDriver implements DriverInterface
         $this->path = $path;
     }
 
-    public function set($key, $data)
+    public function setData($key, $data)
     {
         $pathinfo = $this->key2PathInfo($key);
         $this->ensureDirectory($this->path . $pathinfo['dirname']);
         file_put_contents($this->path . $pathinfo['dirname'] . "/" . $pathinfo['filename'], $data);
     }
 
-    public function get($key)
+    public function getData($key)
     {
         $pathinfo = $this->key2PathInfo($key);
         if (!file_exists($this->path . $pathinfo['dirname'] . "/" . $pathinfo['filename'])) {
@@ -42,7 +40,7 @@ class FileDriver implements DriverInterface
         return $data;
     }
 
-    public function delete($key)
+    public function deleteData($key)
     {
 
         $pathinfo = $this->key2PathInfo($key);

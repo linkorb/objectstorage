@@ -1,33 +1,37 @@
 <?php
 
-namespace LinkORB\Component\ObjectStorage;
+namespace ObjectStorage;
 
 use RuntimeException;
 
 class Client
 {
-    private $driver;
+    private $storageadapter;
     private $prefix;
 
-    public function __construct($driver, $prefix = '')
+    public function __construct($storageadapter)
     {
-        $this->driver = $driver;
+        $this->storageadapter = $storageadapter;
+    }
+    
+    public function setKeyPrefix($prefix)
+    {
         $this->prefix = $prefix;
     }
 
     public function get($key)
     {
-        return $this->driver->get($this->prefix . $key);
+        return $this->storageadapter->getData($this->prefix . $key);
     }
 
     public function set($key, $data)
     {
-        $this->driver->set($this->prefix . $key, $data);
+        $this->storageadapter->setData($this->prefix . $key, $data);
     }
 
     public function delete($key)
     {
-        $this->driver->delete($this->prefix . $key);
+        $this->storageadapter->deleteData($this->prefix . $key);
     }
 
     public function upload($key, $filename)
@@ -45,5 +49,4 @@ class Client
         $data = $this->get($this->prefix . $key);
         file_put_contents($filename, $data);
     }
-
 }

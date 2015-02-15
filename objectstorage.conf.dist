@@ -7,7 +7,7 @@
 
 [general]
 ; Select one of the available drivers: s3, file, gridfs, pdo
-driver = file
+adapter = file
 
 [s3]
 key = my_s3_key

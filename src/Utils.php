@@ -1,8 +1,8 @@
 <?php
 
-namespace LinkORB\Component\ObjectStorage;
+namespace ObjectStorage;
 
-use LinkORB\Component\ObjectStorage\Client;
+use ObjectStorage\Client;
 use Aws\S3\S3Client;
 use RuntimeException;
 use InvalidArgumentException;
@@ -29,7 +29,7 @@ class Utils
             throw new RuntimeException("Config file not found");
         }
         $config = parse_ini_file($filename, true);
-        if (!isset($config['general']['driver'])) {
+        if (!isset($config['general']['storageadapter'])) {
             throw new RuntimeException("Config file not valid, please check objectstore.conf.dist for an example");
         }
         return $config;
@@ -37,13 +37,13 @@ class Utils
 
     public static function getClientFromConfig($config)
     {
-        $drivername = (string)$config['general']['driver'];
-        $driverclassname = 'LinkORB\\Component\\ObjectStorage\\Driver\\' . $drivername . 'Driver';
-        if (!class_exists($driverclassname)) {
-            throw new RuntimeException("Driver class not found or supported: " . $driverclassname);
+        $adaptername = (string)$config['general']['storageadapter'];
+        $adapterclassname = 'ObjectStorage\\Adapter\\' . $adaptername . 'Adapter';
+        if (!class_exists($adapterclassname)) {
+            throw new RuntimeException("Adapter class not found or supported: " . $adapterclassname);
         }
-        echo $driverclass;
-        switch(strtolower($drivername)) {
+        //echo $adapterclassname;
+        switch(strtolower($adaptername)) {
             case "s3":
                 $s3client = null;
                 $key = (string)$config['s3']['access_key'];
@@ -58,7 +58,7 @@ class Utils
                     'key' => $key,
                     'secret' => $secret
                 ));
-                $driver = new $driverclassname($client, $config['s3']['bucketname']);
+                $driver = new $adapterclassname($client, $config['s3']['bucketname']);
                 break;
 
             case "file":
@@ -81,7 +81,7 @@ class Utils
                 $mongoclient = new MongoClient($server);
                 $db = $mongoclient->selectDB($dbname);
                 $grid = $db->getGridFS();
-                $driver = new $driverclassname($grid);
+                $driver = new $adapterclassname($grid);
                 break;
 
             case "pdo":
@@ -99,14 +99,14 @@ class Utils
                 $password = (string)$config['pdo']['password'];
 
                 $pdo = new PDO($dsn, $username, $password);    
-                $driver = new $driverclassname($pdo, $tablename);
+                $adapter = new $adapterclassname($pdo, $tablename);
                 break;
             default:
-                throw new RuntimeException("Unsupported driver: " . $drivername);
+                throw new RuntimeException("Unsupported adapter: " . $adaptername);
                 break;
 
         }
-        $client = new Client($driver);
+        $client = new Client($adapter);
         return $client;
     }
 }

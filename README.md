@@ -1,6 +1,8 @@
-# ObjectStorage library
+# ObjectStorage 2.0 library
 
 ObjectStorage library for your cloud-based applications.
+
+*NOTE: version 1.0, previously only available as dev-master, is still available by updating your composer.json to require version ~1.0*
 
 ## Object Storage vs a normal file system
 
@@ -47,10 +49,10 @@ To create your own driver, simply create a class that implements the very simple
 
 ```php
 // Instantiate a driver of your choice (file, s3, gridfs, pdo, etc...)
-$driver = new LinkORB\Component\ObjectStorage\Driver\PdoDriver($pdo);
+$driver = new ObjectStorage\Adapter\PdoAdapter($pdo);
 
 // Instantiate an ObjectStorage Client that uses the driver instance
-$client = new LinkORB\Component\ObjectStorage\Client($driver);
+$client = new ObjectStorage\Client($driver);
 
 // Upload a local png into object storage
 $client->upload('my-photo', '/home/test/some_file.png');
@@ -82,13 +84,13 @@ You can use it for testing and introspection.
 ### Example console commands:
 
     # Upload a file into object storage
-    bin/console objectstorage:upload my-photo /home/test/input.png
+    bin/objectstorage objectstorage:upload my-photo /home/test/input.png
 
     # Download a file from object storage
-    bin/console objectstorage:upload my-photo /home/test/output.png
+    bin/objectstorage objectstorage:upload my-photo /home/test/output.png
 
     # Delete data from object storage
-    bin/console objectstorage:upload my-photo
+    bin/objectstorage objectstorage:upload my-photo
 
 ### Configuration file
 
@@ -101,17 +103,20 @@ You can also specify a config file explicity by using the option `--config mycon
 
 ### Example config file:
 
-This repository contains a file called `objectstorage.conf.dist` which you can use to copy to `objectstorage.conf` and add your own credentials. The comments in this file explain what options are available.
+This repository contains a file called `objectstorage.conf.dist` which you can use
+to copy to `objectstorage.conf` and add your own credentials.
+
+The comments in this file explain what options are available.
 
 ## Features
 
 * PSR-0 compatible, works with composer and is registered on packagist.org
 * PSR-1 and PSR-2 level coding style
-* Supports Amazon S3 (`S3Driver`)
-* Supports MongoDB GridFS (`GridFsDriver`) 
-* Supports MySQL, PostgreSQL, Oracle, SQLite, MS SQL Server, etc through PDO (`PdoDriver`) 
-* Supports File systems (`FileDriver`)
-* Included with command line utility for testing and introspection
+* Supports Amazon S3 (`S3Adapter`)
+* Supports MongoDB GridFS (`GridFsAdapter`) 
+* Supports MySQL, PostgreSQL, Oracle, SQLite, MS SQL Server, etc through PDO (`PdoAdapter`) 
+* Supports File systems (`FileAdapter`)
+* Includes a CLI utility for testing and introspection
 
 ## Todo (Pull-requests welcome!)
 
@@ -128,7 +133,7 @@ Then, add `linkorb/objectstorage` to your project's `composer.json`:
 ```json
 {
     "require": {
-        "linkorb/objectstorage": "dev-master"
+        "linkorb/objectstorage": "~2.0"
     }
 }
 ```

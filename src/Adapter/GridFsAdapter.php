@@ -1,17 +1,15 @@
 <?php
-/** 
- * This file implements the LinkORB_ObjectStore_S3 class
- */
 
-namespace LinkORB\Component\ObjectStorage\Driver;
+namespace ObjectStorage\Adapter;
 
+use MongoGridFS;
 use InvalidArgumentException;
 
-class GridFsDriver implements DriverInterface
+class GridFsAdapter implements StorageAdapterInterface
 {
     private $gridfs = null;
 
-    public function __construct($gridfs)
+    public function __construct(MongoGridFS $gridfs)
     {
         $this->setGridFs($gridfs);
     }
@@ -21,18 +19,18 @@ class GridFsDriver implements DriverInterface
         $this->gridfs = $gridfs;
     }
     
-    public function set($key, $data)
+    public function setData($key, $data)
     {
         $this->gridfs->storeBytes($data, array("filename" => $key, "_id" => $key));
     }
 
-    public function get($key)
+    public function getData($key)
     {
         $file = $this->gridfs->get($key);
         return $file->getBytes();
     }
     
-    public function delete($key)
+    public function deleteData($key)
     {
         $this->gridfs->delete($key);
     }

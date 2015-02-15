@@ -1,22 +1,22 @@
 <?php
 
-namespace LinkORB\Component\ObjectStorage\Command;
+namespace ObjectStorage\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use LinkORB\Component\ObjectStorage\Utils;
+use ObjectStorage\Utils;
 
-class DeleteCommand extends Command
+class DownloadCommand extends Command
 {
 
     protected function configure()
     {
-        $this->setName('objectstorage:delete')
+        $this->setName('objectstorage:download')
             ->setDescription(
-                'Delete a key from objectstorage'
+                'Download a file from objectstorage to a local file'
             )
             ->addOption(
                 'config',
@@ -28,7 +28,13 @@ class DeleteCommand extends Command
                 'key',
                 InputArgument::REQUIRED,
                 'The key of the file in objectstorage'
+            )
+            ->addArgument(
+                'filename',
+                InputArgument::REQUIRED,
+                'Local filename to write to'
             );
+
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -37,10 +43,11 @@ class DeleteCommand extends Command
         $config = Utils::loadConfig($configfilename);
         $client = Utils::getClientFromConfig($config);
 
+        $filename = $input->getArgument('filename');
         $key = $input->getArgument('key');
 
-        $output->writeln("Deleting key '" . $key . "'\n");
-        $client->delete($key);
+        $output->writeln("Downloading key '" . $key . "' to file '" . $filename . "'");
+        $client->download($key, $filename);
         $output->writeln("Done");
     }
 }
