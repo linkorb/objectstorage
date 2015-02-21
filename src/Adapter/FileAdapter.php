@@ -36,7 +36,7 @@ class FileAdapter implements StorageAdapterInterface
         if (!file_exists($this->path . $pathinfo['dirname'] . "/" . $pathinfo['filename'])) {
             throw new RuntimeException("Key not found: " . $key);
         }
-        $data = file_get_contents($this->path . $pathinfo['dirname'] . "/" . $pathinfo['filename'], $filename);
+        $data = file_get_contents($this->path . $pathinfo['dirname'] . "/" . $pathinfo['filename']);
         return $data;
     }
 
