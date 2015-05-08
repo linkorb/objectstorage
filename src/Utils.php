@@ -50,21 +50,21 @@ class Utils
                 $key = (string)$config['s3']['access_key'];
                 $secret = (string)$config['s3']['secret_key'];
                 if (trim($key)=='') {
-                    throw new InvalidArgumentException("No access key provided for s3 driver");
+                    throw new InvalidArgumentException("No access key provided for s3 adapter");
                 }
                 if (trim($secret)=='') {
-                    throw new InvalidArgumentException("No secret key provided for s3 driver");
+                    throw new InvalidArgumentException("No secret key provided for s3 adapter");
                 }
                 $client = S3Client::factory(array(
                     'key' => $key,
                     'secret' => $secret
                 ));
-                $driver = new $adapterclassname($client, $config['s3']['bucketname']);
+                $adapter = new $adapterclassname($client, $config['s3']['bucketname']);
                 break;
 
             case "file":
                 $path = $config['file']['path'];
-                $driver = new $driverclassname($path);
+                $adapter = new $adapterclassname($path);
                 break;
 
             case "gridfs":
@@ -76,24 +76,24 @@ class Utils
 
                 $dbname = (string)$config['gridfs']['dbname'];
                 if (trim($dbname)=='') {
-                    throw new InvalidArgumentException("No dbname specified for gridfs driver");
+                    throw new InvalidArgumentException("No dbname specified for gridfs adapter");
                 }
 
                 $mongoclient = new MongoClient($server);
                 $db = $mongoclient->selectDB($dbname);
                 $grid = $db->getGridFS();
-                $driver = new $adapterclassname($grid);
+                $adapter = new $adapterclassname($grid);
                 break;
 
             case "pdo":
                 $dsn = (string)$config['pdo']['dsn'];
                 if (trim($dsn)=='') {
-                    throw new InvalidArgumentException("No dsn specified for pdo driver");
+                    throw new InvalidArgumentException("No dsn specified for pdo adapter");
                 }
 
                 $tablename = (string)$config['pdo']['tablename'];
                 if (trim($tablename)=='') {
-                    throw new InvalidArgumentException("No tablename specified for pdo driver");
+                    throw new InvalidArgumentException("No tablename specified for pdo adapter");
                 }
 
                 $username = (string)$config['pdo']['username'];
