@@ -11,4 +11,7 @@ $application->add(new \ObjectStorage\Command\UploadCommand());
 $application->add(new \ObjectStorage\Command\DownloadCommand());
 $application->add(new \ObjectStorage\Command\ListCommand());
 $application->add(new \ObjectStorage\Command\DeleteCommand());
+$application->add(new \ObjectStorage\Command\GenerateKeyCommand());
+$application->add(new \ObjectStorage\Command\EncryptCommand());
+$application->add(new \ObjectStorage\Command\DecryptCommand());
 $application->run();
