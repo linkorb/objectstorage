@@ -8,6 +8,7 @@ use RuntimeException;
 use InvalidArgumentException;
 use MongoClient;
 use PDO;
+use ObjectStorage\Adapter\EncryptionAdapter;
 
 class Utils
 {
@@ -105,6 +106,14 @@ class Utils
                 throw new RuntimeException("Unsupported adapter: " . $adaptername);
                 break;
 
+        }
+        
+        if (isset($config['encryption'])) {
+            $key = (string)$config['encryption']['key'];
+            $iv = (string)$config['encryption']['iv'];
+            
+            // Wrap the real adapter into the encryption adapter
+            $adapter = new EncryptionAdapter($adapter, $key, $iv);
         }
         $service = new Service($adapter);
         return $service;
