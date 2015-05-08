@@ -24,6 +24,7 @@ class Bzip2Adapter implements StorageAdapterInterface
 
     public function getData($key)
     {
+        $data = $this->child->getData($key);
         $data = bzdecompress($data);
         return $data;
     }
