@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use MongoClient;
 use PDO;
 use ObjectStorage\Adapter\EncryptionAdapter;
+use ObjectStorage\Adapter\Bzip2Adapter;
 
 class Utils
 {
@@ -107,7 +108,7 @@ class Utils
                 break;
 
         }
-        
+
         if (isset($config['encryption'])) {
             $key = (string)$config['encryption']['key'];
             $iv = (string)$config['encryption']['iv'];
@@ -115,6 +116,14 @@ class Utils
             // Wrap the real adapter into the encryption adapter
             $adapter = new EncryptionAdapter($adapter, $key, $iv);
         }
+
+        if (isset($config['bzip2'])) {
+            $level = (string)$config['bzip2']['level'];
+
+            // Wrap the real adapter into the bzip2 compression adapter
+            $adapter = new Bzip2Adapter($adapter, $level);
+        }
+        
         $service = new Service($adapter);
         return $service;
     }
