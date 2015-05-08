@@ -76,6 +76,45 @@ echo $text; // Outputs "Hello world!";
 $service->delete('my-message');
 ```
 
+### Encryption
+
+The library includes an EncryptionAdapter that will allow you to transparently encrypt/decrypt
+your data before it's passed to the storage backend.
+
+This is done by wrapping the original storage adapter (s3, file, pdo, gridfs, etc) into
+the EncryptionAdapter. Here's an example
+
+```php
+$adapter = new ObjectStorage\Adapter\PdoAdapter($pdo);
+$adapter = new ObjectStorage\Adapter\EncryptionAdapter($adapter, $key, $iv);
+// You can use $adapter as before, but all data will be encrypted
+```
+
+The key and iv are hex encoded strings. To generate these, use the following command:
+
+./bin/objectstorage objectstorage:generatekey
+
+This will output something like the following:
+
+    KEY: C2FE680A5613469189621C9E46B52C15C9C80E50370E7950D6FD2D027C4FAEF0
+    IV: E5F3E442F3CE0ECC931B7E866A5F3121
+    
+Save these 2 values somewhere safely.
+
+The encryption is similar to using the following commands:
+
+    openssl enc -aes-256-cbc -K C2FE680A5613469189621C9E46B52C15C9C80E50370E7950D6FD2D027C4FAEF0 -iv E5F3E442F3CE0ECC931B7E866A5F3121 < original.txt > encrypted.aes
+
+    openssl enc -d -aes-256-cbc -K C2FE680A5613469189621C9E46B52C15C9C80E50370E7950D6FD2D027C4FAEF0 -iv E5F3E442F3CE0ECC931B7E866A5F3121 < encrypted.aes
+    
+You can also use the included encrypt + decrypt commands:
+
+    export OBJECTSTORAGE_ENCRYPTION_KEY=C2FE680A5613469189621C9E46B52C15C9C80E50370E7950D6FD2D027C4FAEF0
+    export OBJECTSTORAGE_ENCRYPTION_IV=E5F3E442F3CE0ECC931B7E866A5F3121
+    
+    bin/objectstorage objectstorage:encrypt example.pdf > example.pdf.encrypted
+    bin/objectstorage objectstorage:decrypt example.pdf.encrypted > example_new.pdf
+    
 ## Console tool
 
 This library comes with a simple console application that uses the library.
