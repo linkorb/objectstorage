@@ -9,11 +9,13 @@ class S3Adapter implements StorageAdapterInterface
     private $s3client = null;
     private $bucketname = null;
     private $defaultacl = 'public-read';
+    private $prefix = '';
 
-    public function __construct($s3client, $bucketname)
+    public function __construct($s3client, $bucketname, $prefix = '')
     {
         $this->setS3Client($s3client);
         $this->setBucketName($bucketname);
+        $this->setPrefix($prefix);
     }
     
     public function setS3Client($s3client)
@@ -29,8 +31,14 @@ class S3Adapter implements StorageAdapterInterface
         $this->bucketname = $bucketname;
     }
     
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
+    }
+    
     public function setData($key, $data)
     {
+        $key = $this->prefix . $key;
         $this->s3client->putObject(
             array(
                 'Bucket' => $this->bucketname,
@@ -43,6 +51,7 @@ class S3Adapter implements StorageAdapterInterface
 
     public function getData($key)
     {
+        $key = $this->prefix . $key;
         $result = $this->s3client->getObject(
             array(
                 'Bucket' => $this->bucketname, 
@@ -54,6 +63,7 @@ class S3Adapter implements StorageAdapterInterface
     
     public function deleteData($key)
     {
+        $key = $this->prefix . $key;
         $this->s3client->deleteObject(
             array(
                 'Bucket' => $this->bucketname, 
@@ -61,5 +71,4 @@ class S3Adapter implements StorageAdapterInterface
             )
         );
     }
-
 }
