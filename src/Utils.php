@@ -31,7 +31,7 @@ class Utils
             throw new RuntimeException("Config file not found");
         }
         $config = parse_ini_file($filename, true);
-        if (!isset($config['general']['storageadapter'])) {
+        if (!isset($config['general']['adapter'])) {
             throw new RuntimeException("Config file not valid, please check objectstore.conf.dist for an example");
         }
         return $config;
@@ -39,8 +39,8 @@ class Utils
 
     public static function getServiceFromConfig($config)
     {
-        $adaptername = (string)$config['general']['storageadapter'];
-        $adapterclassname = 'ObjectStorage\\Adapter\\' . $adaptername . 'Adapter';
+        $adaptername = (string)$config['general']['adapter'];
+        $adapterclassname = 'ObjectStorage\\Adapter\\' . ucfirst($adaptername) . 'Adapter';
         if (!class_exists($adapterclassname)) {
             throw new RuntimeException("Adapter class not found or supported: " . $adapterclassname);
         }
