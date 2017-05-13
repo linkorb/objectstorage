@@ -49,7 +49,7 @@ To create your own adapter, simply create a class that implements the very simpl
 
 ```php
 // Instantiate a driver of your choice (file, s3, gridfs, pdo, etc...)
-$adapter = new ObjectStorage\Adapter\PdoAdapter($pdo);
+$adapter = ObjectStorage\Adapter\PdoAdapter::build($config);
 
 // Instantiate an ObjectStorage Service that uses the adapter instance
 $service = new ObjectStorage\Service($adapter);
