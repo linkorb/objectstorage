@@ -28,3 +28,11 @@ dsn = "mysql:dbname=mydbname;host=127.0.0.1"
 username = db_user
 password = db_pass
 tablename = objectstorage
+
+[bergen]
+host = "localhost"
+; optional HTTP Basic Auth credentials
+username = "someuser"
+password = "somepass"
+; optionally turn off HTTPS
+secure = false
