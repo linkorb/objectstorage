@@ -18,6 +18,9 @@
         "symfony/console": "~2.4",
         "aws/aws-sdk-php": "~2.7"
     },
+    "suggest": {
+        "linkorb/bergen-client-php": "To use the Bergen Adapter."
+    },
     "autoload": {
         "psr-4": {
             "ObjectStorage\\": "src/"

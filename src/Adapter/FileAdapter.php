@@ -10,6 +10,17 @@ class FileAdapter implements StorageAdapterInterface
     private $path = null;
     public $type = null;
 
+    public static function build(array $config)
+    {
+        if (!array_key_exists('path', $config)) {
+            throw new InvalidArgumentException(
+                'Unable to build FileAdapter: missing "path" from configuration.'
+            );
+        }
+
+        return new self($config['path']);
+    }
+
     public function __construct($path)
     {
         $this->setPath($path);

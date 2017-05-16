@@ -11,6 +11,37 @@ class PdoAdapter implements StorageAdapterInterface
     private $pdo;
     private $tablename;
 
+    public static function build(array $config)
+    {
+        if (!array_key_exists('dsn', $config)
+            || trim($config['dsn']) === ''
+        ) {
+            throw new InvalidArgumentException(
+                'Unable to build PdoAdapter: missing "dsn" from configuration.'
+            );
+        }
+        if (!array_key_exists('tablename', $config)
+            || trim($config['tablename']) == ''
+        ) {
+            throw new InvalidArgumentException(
+                'Unable to build PdoAdapter: missing "tablename" from configuration.'
+            );
+        }
+        $username = null;
+        if (isset($config['username'])) {
+            $username = trim($config['username']);
+        }
+        $password = null;
+        if (isset($config['password'])) {
+            $password = trim($config['password']);
+        }
+
+        return new self(
+            new PDO(trim($config['dsn']), $username, $password),
+            trim($config['tablename'])
+        );
+    }
+
     public function __construct(PDO $pdo, $tablename = 'objectstorage')
     {
         $this->setPdo($pdo);
