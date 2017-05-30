@@ -22,20 +22,20 @@ class BergenAdapter implements StorageAdapterInterface
                 'Unable to build BergenAdapter: missing "host" from configuration.'
             );
         }
-        $config = [
+        $clientOpts = [
             ClientOptions::API_HOST => trim($config['host']),
         ];
         if (isset($config['username']) && isset($config['password'])) {
-            $config[RequestOptions::AUTH] = [
+            $clientOpts[RequestOptions::AUTH] = [
                 trim($config['username']),
                 $config['password'],
             ];
         }
         if (array_key_exists('secure', $config)) {
-            $config[ClientOptions::SECURE_HTTP] = (bool) $config['secure'];
+            $clientOpts[ClientOptions::SECURE_HTTP] = (bool) $config['secure'];
         }
 
-        return new self(new V1StorageClient(new ClientBuilder($config)));
+        return new self(new V1StorageClient(new ClientBuilder($clientOpts)));
     }
 
     public function __construct(V1StorageClient $client)
