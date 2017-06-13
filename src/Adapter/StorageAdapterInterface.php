@@ -13,5 +13,5 @@ interface StorageAdapterInterface
      * @param array $config
      * @return \ObjectStorage\Adapter\StorageAdapterInterface
      */
-    public static function build(array $config);
+    //public static function build(array $config);
 }
