@@ -7,16 +7,21 @@ use RuntimeException;
 class Service
 {
     private $storageadapter;
-    private $prefix;
+    private $prefix = '';
 
     public function __construct($storageadapter)
     {
         $this->storageadapter = $storageadapter;
     }
-    
+
     public function setKeyPrefix($prefix)
     {
         $this->prefix = $prefix;
+    }
+
+    public function getKeyPrefix()
+    {
+        return $this->prefix;
     }
 
     public function get($key)
