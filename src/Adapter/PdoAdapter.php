@@ -6,7 +6,7 @@ use PDO;
 use ObjectStorage\Key;
 use InvalidArgumentException;
 
-class PdoAdapter implements StorageAdapterInterface
+class PdoAdapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
     private $pdo;
     private $tablename;

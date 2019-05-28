@@ -8,7 +8,7 @@ use Bergen\Client\Error\UnexpectedResponseError;
 use Bergen\Client\V1\V1StorageClient;
 use GuzzleHttp\RequestOptions;
 
-class BergenAdapter implements StorageAdapterInterface
+class BergenAdapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
     /**
      * @var \Bergen\Client\V1\V1StorageClient

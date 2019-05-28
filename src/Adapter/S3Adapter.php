@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 use Aws\S3\S3Client;
 
-class S3Adapter implements StorageAdapterInterface
+class S3Adapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
     private $s3client = null;
     private $bucketname = null;

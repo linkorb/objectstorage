@@ -7,7 +7,7 @@ use InvalidArgumentException;
 use MongoClient;
 use MongoGridFS;
 
-class GridFsAdapter implements StorageAdapterInterface
+class GridFsAdapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
     private $gridfs = null;
 

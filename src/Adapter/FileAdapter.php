@@ -5,7 +5,7 @@ namespace ObjectStorage\Adapter;
 use RuntimeException;
 use InvalidArgumentException;
 
-class FileAdapter implements StorageAdapterInterface
+class FileAdapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
     private $path = null;
     public $type = null;
