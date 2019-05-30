@@ -13,15 +13,15 @@ use ObjectStorage\Command\UploadCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
-$application = new Application('ObjectStorage CLI utility', '1.0.0');
+$application = new Application('ObjectStorage CLI utility', 'v3');
 $application->setCatchExceptions(true);
 $application->setCommandLoader(new FactoryCommandLoader([
     'objectstorage:upload' => function () { return new UploadCommand(); },
     'objectstorage:download' => function () { return new DownloadCommand(); },
     'objectstorage:list' => function () { return new ListCommand(); },
     'objectstorage:delete' => function () { return new DeleteCommand(); },
-    'objectstorage:generatekey' => function () { return new GenerateKeyCommand(); },
-    'objectstorage:encrypt' => function () { return new EncryptCommand(); },
-    'objectstorage:decrypt' => function () { return new DecryptCommand(); },
+    'genkey' => function () { return new GenerateKeyCommand(); },
+    'encrypt' => function () { return new EncryptCommand(); },
+    'decrypt' => function () { return new DecryptCommand(); },
 ]));
 $application->run();

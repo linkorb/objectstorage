@@ -2,37 +2,44 @@
 
 namespace ObjectStorage\Command;
 
+use ParagonIE\Halite\KeyFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputArgument;
 
 class GenerateKeyCommand extends Command
 {
+    const ARG_PATH = 'path';
+
     protected function configure()
     {
-        $this->setName('objectstorage:generatekey')
+        $this->setName('genkey')
             ->setDescription(
-                'Generate encryption key and iv'
+                'Generate a symmetric encryption key and write it to a file at the supplied path.  This command will not overwrite an existing file.'
+            )
+            ->addArgument(
+                self::ARG_PATH,
+                InputArgument::REQUIRED,
+                'The path to which to save the key file.'
             )
         ;
     }
 
-    private function strtohex($x)
-    {
-        $s = '';
-        foreach (str_split($x) as $c) {
-            $s .= sprintf('%02X', ord($c));
-        }
-
-        return $s;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $key = openssl_random_pseudo_bytes(32);
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+        $path = $input->getArgument(self::ARG_PATH);
 
-        $output->writeln('KEY: ' . $this->strtohex($key));
-        $output->writeln('IV: ' . $this->strtohex($iv));
+        if (\file_exists($path)) {
+            $output->writeln("I cannot create a key file at \"{$path}\" because a file exists there already. I stop!");
+
+            return 1;
+        }
+
+        if (true !== KeyFactory::save(KeyFactory::generateEncryptionKey(), $path)) {
+            $output->writeln("I tried, but was unable to write the key to a file at \"{$path}\". I apologise!");
+
+            return 2;
+        }
     }
 }
