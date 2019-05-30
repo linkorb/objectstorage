@@ -5,7 +5,6 @@ namespace ObjectStorage\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use RuntimeException;
 
@@ -24,7 +23,7 @@ class EncryptCommand extends Command
             )
         ;
     }
-    
+
     /*
     private function strtohex($x)
     {
@@ -35,28 +34,28 @@ class EncryptCommand extends Command
         return($s);
     }
     */
-    
+
     private function hextostr($hex)
     {
-        $string='';
-        for ($i=0; $i < strlen($hex)-1; $i+=2) {
-            $string .= chr(hexdec($hex[$i].$hex[$i+1]));
+        $string = '';
+        for ($i = 0; $i < strlen($hex) - 1; $i += 2) {
+            $string .= chr(hexdec($hex[$i] . $hex[$i + 1]));
         }
+
         return $string;
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $key = getenv('OBJECTSTORAGE_ENCRYPTION_KEY');
         $iv = getenv('OBJECTSTORAGE_ENCRYPTION_IV');
 
         if (!$key || !$iv) {
-            throw new RuntimeException("Could not obtain encryption key + iv from environment");
+            throw new RuntimeException('Could not obtain encryption key + iv from environment');
         }
-        
+
         $key = $this->hextostr($key);
         $iv = $this->hextostr($iv);
-        
 
         $filename = $input->getArgument('filename');
 

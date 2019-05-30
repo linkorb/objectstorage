@@ -11,7 +11,6 @@ use ObjectStorage\Utils;
 
 class DeleteCommand extends Command
 {
-
     protected function configure()
     {
         $this->setName('objectstorage:delete')
@@ -41,6 +40,6 @@ class DeleteCommand extends Command
 
         $output->writeln("Deleting key '" . $key . "'");
         $service->delete($key);
-        $output->writeln("Done");
+        $output->writeln('Done');
     }
 }

@@ -29,7 +29,7 @@ class ListCommand extends Command
                 'The prefix to scan for'
             );
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $configfilename = $input->getOption('config');
@@ -41,15 +41,13 @@ class ListCommand extends Command
         $output->writeln("Listing keys /w prefix '" . $prefix . "'\n");
         $keys = $service->listKeys($prefix);
 
-        foreach($keys as $key)
-        {
+        foreach ($keys as $key) {
             $output->writeln("* Key: '" . $key->getKey() . "'");
             $metadata = $key->getMetaData();
-            foreach($metadata as $k => $v) {
-                $output->writeln("   - '$k' = " . (string)$v);
-
+            foreach ($metadata as $k => $v) {
+                $output->writeln("   - '$k' = " . (string) $v);
             }
         }
-        $output->writeln("Done");
+        $output->writeln('Done');
     }
 }

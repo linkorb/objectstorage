@@ -60,6 +60,7 @@ class BergenAdapter implements BuildableAdapterInterface, StorageAdapterInterfac
         } catch (UnexpectedResponseError $e) {
             throw new AdapterException('Unable to get data.', null, $e);
         }
+
         return (string) $response->getBody();
     }
 

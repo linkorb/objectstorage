@@ -11,7 +11,6 @@ use ObjectStorage\Utils;
 
 class DownloadCommand extends Command
 {
-
     protected function configure()
     {
         $this->setName('objectstorage:download')
@@ -34,7 +33,6 @@ class DownloadCommand extends Command
                 InputArgument::REQUIRED,
                 'Local filename to write to'
             );
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -48,6 +46,6 @@ class DownloadCommand extends Command
 
         $output->writeln("Downloading key '" . $key . "' to file '" . $filename . "'");
         $service->download($key, $filename);
-        $output->writeln("Done");
+        $output->writeln('Done');
     }
 }

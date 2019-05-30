@@ -3,11 +3,8 @@
 namespace ObjectStorage\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use RuntimeException;
 
 class GenerateKeyCommand extends Command
 {
@@ -19,22 +16,23 @@ class GenerateKeyCommand extends Command
             )
         ;
     }
-    
+
     private function strtohex($x)
     {
-        $s='';
+        $s = '';
         foreach (str_split($x) as $c) {
-            $s.=sprintf("%02X", ord($c));
+            $s .= sprintf('%02X', ord($c));
         }
-        return($s);
+
+        return $s;
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $key = openssl_random_pseudo_bytes(32);
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        
-        $output->writeln("KEY: " . $this->strtohex($key));
-        $output->writeln("IV: " . $this->strtohex($iv));
+
+        $output->writeln('KEY: ' . $this->strtohex($key));
+        $output->writeln('IV: ' . $this->strtohex($iv));
     }
 }

@@ -2,9 +2,6 @@
 
 namespace ObjectStorage\Adapter;
 
-use RuntimeException;
-use InvalidArgumentException;
-
 class Bzip2Adapter implements StorageAdapterInterface
 {
     private $child;
@@ -19,6 +16,7 @@ class Bzip2Adapter implements StorageAdapterInterface
     public function setData($key, $data)
     {
         $data = bzcompress($data, $this->level);
+
         return $this->child->setData($key, $data);
     }
 
@@ -26,6 +24,7 @@ class Bzip2Adapter implements StorageAdapterInterface
     {
         $data = $this->child->getData($key);
         $data = bzdecompress($data);
+
         return $data;
     }
 
