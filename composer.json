@@ -16,7 +16,9 @@
     },
     "require-dev": {
         "symfony/console": "^4",
-        "aws/aws-sdk-php": "^3"
+        "aws/aws-sdk-php": "^3",
+        "friendsofphp/php-cs-fixer": "^2.15",
+        "phpunit/phpunit": "^8.1"
     },
     "suggest": {
         "linkorb/bergen-client-php": "To use the Bergen Adapter."
