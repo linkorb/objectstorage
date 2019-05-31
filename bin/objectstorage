@@ -1,17 +1,27 @@
 #!/usr/bin/env php
 <?php
 
-use Symfony\Component\Console\Application;
-
 require_once(__DIR__ . "/../vendor/autoload.php");
+
+use ObjectStorage\Command\DecryptCommand;
+use ObjectStorage\Command\DeleteCommand;
+use ObjectStorage\Command\DownloadCommand;
+use ObjectStorage\Command\EncryptCommand;
+use ObjectStorage\Command\GenerateKeyCommand;
+use ObjectStorage\Command\ListCommand;
+use ObjectStorage\Command\UploadCommand;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
 $application = new Application('ObjectStorage CLI utility', '1.0.0');
 $application->setCatchExceptions(true);
-$application->add(new \ObjectStorage\Command\UploadCommand());
-$application->add(new \ObjectStorage\Command\DownloadCommand());
-$application->add(new \ObjectStorage\Command\ListCommand());
-$application->add(new \ObjectStorage\Command\DeleteCommand());
-$application->add(new \ObjectStorage\Command\GenerateKeyCommand());
-$application->add(new \ObjectStorage\Command\EncryptCommand());
-$application->add(new \ObjectStorage\Command\DecryptCommand());
+$application->setCommandLoader(new FactoryCommandLoader([
+    'objectstorage:upload' => function () { return new UploadCommand(); },
+    'objectstorage:download' => function () { return new DownloadCommand(); },
+    'objectstorage:list' => function () { return new ListCommand(); },
+    'objectstorage:delete' => function () { return new DeleteCommand(); },
+    'objectstorage:generatekey' => function () { return new GenerateKeyCommand(); },
+    'objectstorage:encrypt' => function () { return new EncryptCommand(); },
+    'objectstorage:decrypt' => function () { return new DecryptCommand(); },
+]));
 $application->run();
