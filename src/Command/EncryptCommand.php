@@ -2,66 +2,97 @@
 
 namespace ObjectStorage\Command;
 
+use ParagonIE\Halite\Alerts\CannotPerformOperation;
+use ParagonIE\Halite\Halite;
+use ParagonIE\Halite\KeyFactory;
+use ParagonIE\Halite\Symmetric\Crypto;
+use ParagonIE\HiddenString\HiddenString;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use RuntimeException;
 
 class EncryptCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('objectstorage:encrypt')
+        $this
+            ->setName('encrypt')
             ->setDescription(
                 'Encrypt a file'
             )
             ->addArgument(
-                'filename',
+                'keyfile',
                 InputArgument::REQUIRED,
-                'The file to decrypt'
+                'The path to a file containing an encryption key, such as one generated with the "objectstorage genkey" console command.'
+            )
+            ->addArgument(
+                'infile',
+                InputArgument::REQUIRED,
+                'The file to encrypt'
+            )
+            ->addArgument(
+                'outfile',
+                InputArgument::REQUIRED,
+                'The path to which to write the encrypted file'
             )
         ;
     }
-    
-    /*
-    private function strtohex($x)
-    {
-        $s='';
-        foreach (str_split($x) as $c) {
-            $s.=sprintf("%02X", ord($c));
-        }
-        return($s);
-    }
-    */
-    
-    private function hextostr($hex)
-    {
-        $string='';
-        for ($i=0; $i < strlen($hex)-1; $i+=2) {
-            $string .= chr(hexdec($hex[$i].$hex[$i+1]));
-        }
-        return $string;
-    }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $key = getenv('OBJECTSTORAGE_ENCRYPTION_KEY');
-        $iv = getenv('OBJECTSTORAGE_ENCRYPTION_IV');
+        $errorOutput = ($output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output);
 
-        if (!$key || !$iv) {
-            throw new RuntimeException("Could not obtain encryption key + iv from environment");
+        $plaintextFile = $input->getArgument('infile');
+        $encryptedFile = $input->getArgument('outfile');
+
+        try {
+            $key = KeyFactory::loadEncryptionKey($input->getArgument('keyfile'));
+        } catch (CannotPerformOperation $e) {
+            $errorOutput->writeln($e->getMessage());
+
+            return 1;
         }
-        
-        $key = $this->hextostr($key);
-        $iv = $this->hextostr($iv);
-        
+        if (\file_exists($encryptedFile)) {
+            $errorOutput->writeln("<error>The file at \"{$encryptedFile}\" already exists and will not be overwritten.</error>");
 
-        $filename = $input->getArgument('filename');
+            return 2;
+        }
+        if (!\file_exists($plaintextFile) || !\is_readable($plaintextFile)) {
+            $errorOutput->writeln("<error>The file at \"{$plaintextFile}\" cannot be opened for reading.</error>");
 
-        $data = file_get_contents($filename);
-        $res = openssl_encrypt($data, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
-        echo $res;
+            return 3;
+        }
+
+        $plaintext = \file_get_contents($plaintextFile);
+
+        if (false === $plaintext) {
+            $errorOutput->writeln("<error>The file at \"{$plaintextFile}\" cannot be opened for reading.</error>");
+
+            return 3;
+        }
+
+        try {
+            $encryptedData = Crypto::encrypt(
+                new HiddenString($plaintext),
+                $key,
+                Halite::ENCODE_BASE64URLSAFE
+            );
+        } catch (CannotPerformOperation $e) {
+            $errorOutput->writeln($e->getMessage());
+
+            return 4;
+        }
+
+        $isWritten = \file_put_contents($encryptedFile, $encryptedData);
+
+        if (false === $isWritten) {
+            $errorOutput->writeln("<error>The encrypted data could not be written to the file at \"{$plaintextFile}\".</error>");
+
+            return 5;
+        }
+
+        $output->writeln('<info>Successs!</info>');
     }
 }

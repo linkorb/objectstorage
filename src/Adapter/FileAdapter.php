@@ -5,7 +5,7 @@ namespace ObjectStorage\Adapter;
 use RuntimeException;
 use InvalidArgumentException;
 
-class FileAdapter implements StorageAdapterInterface
+class FileAdapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
     private $path = null;
     public $type = null;
@@ -29,7 +29,7 @@ class FileAdapter implements StorageAdapterInterface
     public function setPath($path)
     {
         if (!file_exists($path)) {
-            throw new RuntimeException("Path does not exist: " . $path);
+            throw new RuntimeException('Path does not exist: ' . $path);
         }
         $this->path = $path;
     }
@@ -38,26 +38,26 @@ class FileAdapter implements StorageAdapterInterface
     {
         $pathinfo = $this->key2PathInfo($key);
         $this->ensureDirectory($this->path . $pathinfo['dirname']);
-        file_put_contents($this->path . $pathinfo['dirname'] . "/" . $pathinfo['filename'], $data);
+        file_put_contents($this->path . $pathinfo['dirname'] . '/' . $pathinfo['filename'], $data);
     }
 
     public function getData($key)
     {
         $pathinfo = $this->key2PathInfo($key);
-        if (!file_exists($this->path . $pathinfo['dirname'] . "/" . $pathinfo['filename'])) {
-            throw new RuntimeException("Key not found: " . $key);
+        if (!file_exists($this->path . $pathinfo['dirname'] . '/' . $pathinfo['filename'])) {
+            throw new RuntimeException('Key not found: ' . $key);
         }
-        $data = file_get_contents($this->path . $pathinfo['dirname'] . "/" . $pathinfo['filename']);
+        $data = file_get_contents($this->path . $pathinfo['dirname'] . '/' . $pathinfo['filename']);
+
         return $data;
     }
 
     public function deleteData($key)
     {
-
         $pathinfo = $this->key2PathInfo($key);
-        $filename = $this->path . $pathinfo['dirname'] . "/" . $pathinfo['filename'];
+        $filename = $this->path . $pathinfo['dirname'] . '/' . $pathinfo['filename'];
         if (!file_exists($filename)) {
-            throw new InvalidArgumentException("Key does not exist: " . $key);
+            throw new InvalidArgumentException('Key does not exist: ' . $key);
         }
 
         unlink($filename);
@@ -66,7 +66,8 @@ class FileAdapter implements StorageAdapterInterface
     private function key2PathInfo($key)
     {
         $info = pathinfo($key);
-        return array("dirname" => $info['dirname'], "filename" => $info['basename']);
+
+        return ['dirname' => $info['dirname'], 'filename' => $info['basename']];
     }
 
     private function ensureDirectory($path)
@@ -75,5 +76,4 @@ class FileAdapter implements StorageAdapterInterface
             mkdir($path, 0777, true);
         }
     }
-   
 }

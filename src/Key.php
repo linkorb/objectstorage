@@ -21,6 +21,7 @@ class Key
     {
         $this->metadata = $data;
     }
+
     public function getMetaData()
     {
         return $this->metadata;

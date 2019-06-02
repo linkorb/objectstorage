@@ -3,10 +3,9 @@
 namespace ObjectStorage\Adapter;
 
 use PDO;
-use ObjectStorage\Key;
 use InvalidArgumentException;
 
-class PdoAdapter implements StorageAdapterInterface
+class PdoAdapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
     private $pdo;
     private $tablename;
@@ -14,14 +13,14 @@ class PdoAdapter implements StorageAdapterInterface
     public static function build(array $config)
     {
         if (!array_key_exists('dsn', $config)
-            || trim($config['dsn']) === ''
+            || '' === trim($config['dsn'])
         ) {
             throw new InvalidArgumentException(
                 'Unable to build PdoAdapter: missing "dsn" from configuration.'
             );
         }
         if (!array_key_exists('tablename', $config)
-            || trim($config['tablename']) == ''
+            || '' == trim($config['tablename'])
         ) {
             throw new InvalidArgumentException(
                 'Unable to build PdoAdapter: missing "tablename" from configuration.'
@@ -47,59 +46,60 @@ class PdoAdapter implements StorageAdapterInterface
         $this->setPdo($pdo);
         $this->setTablename($tablename);
     }
-    
+
     public function setPdo($pdo)
     {
         $this->pdo = $pdo;
     }
-    
+
     public function setTablename($tablename)
     {
         if (!ctype_alnum($tablename)) {
-            throw new InvalidArgumentException("Only alphanumeric tablenames allowed");
+            throw new InvalidArgumentException('Only alphanumeric tablenames allowed');
         }
         $this->tablename = $tablename;
     }
-    
+
     public function setData($key, $data)
     {
         $statement = $this->pdo->prepare(
-            "INSERT INTO " . $this->tablename . "
+            'INSERT INTO ' . $this->tablename . '
             (`objectkey`, `objectdata`)
             VALUES
             (:key, :data)
             ON DUPLICATE KEY UPDATE
-            `objectdata` = :data"
+            `objectdata` = :data'
         );
-        $statement->bindParam(":data", $data, PDO::PARAM_STR);
-        $statement->bindParam(":key", $key, PDO::PARAM_STR);
+        $statement->bindParam(':data', $data, PDO::PARAM_STR);
+        $statement->bindParam(':key', $key, PDO::PARAM_STR);
         $statement->execute();
     }
 
     public function getData($key)
     {
         $statement = $this->pdo->prepare(
-            "SELECT objectdata FROM " . $this->tablename . "
-            WHERE objectkey = :key"
+            'SELECT objectdata FROM ' . $this->tablename . '
+            WHERE objectkey = :key'
         );
-        
-        $statement->bindParam(":key", $key, PDO::PARAM_STR);
+
+        $statement->bindParam(':key', $key, PDO::PARAM_STR);
         $statement->execute();
         $res = $statement->fetchAll();
-        foreach($res as $r) {
-            return (string)$r['objectdata'];
+        foreach ($res as $r) {
+            return (string) $r['objectdata'];
         }
+
         return null;
     }
-    
+
     public function deleteData($key)
     {
         $statement = $this->pdo->prepare(
-            "DELETE FROM " . $this->tablename . "
-            WHERE objectkey = :key"
+            'DELETE FROM ' . $this->tablename . '
+            WHERE objectkey = :key'
         );
-        
-        $statement->bindParam(":key", $key, PDO::PARAM_STR);
+
+        $statement->bindParam(':key', $key, PDO::PARAM_STR);
         $statement->execute();
     }
 }

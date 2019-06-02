@@ -42,7 +42,7 @@ class Service
     public function upload($key, $filename)
     {
         if (!file_exists($filename)) {
-            throw new RuntimeException("File not found: " . $filename);
+            throw new RuntimeException('File not found: ' . $filename);
         }
 
         $data = file_get_contents($filename);

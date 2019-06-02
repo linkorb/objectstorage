@@ -8,7 +8,7 @@ use Bergen\Client\Error\UnexpectedResponseError;
 use Bergen\Client\V1\V1StorageClient;
 use GuzzleHttp\RequestOptions;
 
-class BergenAdapter implements StorageAdapterInterface
+class BergenAdapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
     /**
      * @var \Bergen\Client\V1\V1StorageClient
@@ -60,6 +60,7 @@ class BergenAdapter implements StorageAdapterInterface
         } catch (UnexpectedResponseError $e) {
             throw new AdapterException('Unable to get data.', null, $e);
         }
+
         return (string) $response->getBody();
     }
 

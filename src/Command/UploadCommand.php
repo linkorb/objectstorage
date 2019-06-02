@@ -11,7 +11,6 @@ use ObjectStorage\Utils;
 
 class UploadCommand extends Command
 {
-
     protected function configure()
     {
         $this->setName('objectstorage:upload')
@@ -34,7 +33,6 @@ class UploadCommand extends Command
                 InputArgument::REQUIRED,
                 'Local filename to upload'
             );
-
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -48,6 +46,6 @@ class UploadCommand extends Command
 
         $output->writeln("Uploading '" . $filename . "' as key '" . $key . "'");
         $service->upload($key, $filename);
-        $output->writeln("Done");
+        $output->writeln('Done');
     }
 }

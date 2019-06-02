@@ -1,8 +1,6 @@
-# ObjectStorage 2.0 library
+# ObjectStorage 3.0 library
 
 ObjectStorage library for your cloud-based applications.
-
-*NOTE: version 1.0, previously only available as dev-master, is still available by updating your composer.json to require version ~1.0*
 
 ## Object Storage vs a normal file system
 
@@ -78,42 +76,38 @@ $service->delete('my-message');
 
 ### Encryption
 
-The library includes an EncryptionAdapter that will allow you to transparently encrypt/decrypt
+The library includes adapters to allow you to transparently encrypt/decrypt
 your data before it's passed to the storage backend.
 
-This is done by wrapping the original storage adapter (s3, file, pdo, gridfs, etc) into
-the EncryptionAdapter. Here's an example
+This is done by wrapping the original storage adapter (s3, file, pdo, gridfs,
+etc) into the one of the encryption adapters. Here's an example
 
 ```php
-$adapter = new ObjectStorage\Adapter\PdoAdapter($pdo);
-$adapter = new ObjectStorage\Adapter\EncryptionAdapter($adapter, $key, $iv);
-// You can use $adapter as before, but all data will be encrypted
+$adapter = new \ObjectStorage\Adapter\EncryptedStorageAdapter(
+    new \ObjectStorage\Adapter\PdoAdapter($pdo),
+    \ParagonIE\Halite\KeyFactory::loadEncryptionKey($pathToKeyfile)
+);
+// You can use $adapter as before and both the storage keys and objects will be
+// encrypted (use PlaintextKeyEncryptedStorageAdapter if you don't want the
+// storage keys to be encrypted).
 ```
 
-The key and iv are hex encoded strings. To generate these, use the following command:
+The encryption routines are provided by [ParagonIE/Halite][] and libsodium.
 
-./bin/objectstorage objectstorage:generatekey
+Use the following command to generate an encryption key and save it to a file :-
 
-This will output something like the following:
+```sh
+./bin/objectstorage genkey /path/to/a/file
+```
 
-    KEY: C2FE680A5613469189621C9E46B52C15C9C80E50370E7950D6FD2D027C4FAEF0
-    IV: E5F3E442F3CE0ECC931B7E866A5F3121
-    
-Save these 2 values somewhere safely.
+You can also use the included encrypt + decrypt commands.  In the following
+example we encrypt `example.pdf` with the encryption key in `key.asc` and then
+decrypt it again, using the same key and writing it to a new `example-new.pdf`:
 
-The encryption is similar to using the following commands:
-
-    openssl enc -aes-256-cbc -K C2FE680A5613469189621C9E46B52C15C9C80E50370E7950D6FD2D027C4FAEF0 -iv E5F3E442F3CE0ECC931B7E866A5F3121 < original.txt > encrypted.aes
-
-    openssl enc -d -aes-256-cbc -K C2FE680A5613469189621C9E46B52C15C9C80E50370E7950D6FD2D027C4FAEF0 -iv E5F3E442F3CE0ECC931B7E866A5F3121 < encrypted.aes
-    
-You can also use the included encrypt + decrypt commands:
-
-    export OBJECTSTORAGE_ENCRYPTION_KEY=C2FE680A5613469189621C9E46B52C15C9C80E50370E7950D6FD2D027C4FAEF0
-    export OBJECTSTORAGE_ENCRYPTION_IV=E5F3E442F3CE0ECC931B7E866A5F3121
-    
-    bin/objectstorage objectstorage:encrypt example.pdf > example.pdf.encrypted
-    bin/objectstorage objectstorage:decrypt example.pdf.encrypted > example_new.pdf
+```sh
+bin/objectstorage encrypt key.asc example.pdf example.pdf.encrypted
+bin/objectstorage decrypt key.asc example.pdf.encrypted example-new.pdf
+```
     
 ## Console tool
 
@@ -172,10 +166,19 @@ Then, add `linkorb/objectstorage` to your project's `composer.json`:
 ```json
 {
     "require": {
-        "linkorb/objectstorage": "~2.0"
+        "linkorb/objectstorage": "^3.0"
     }
 }
 ```
+
+## Older versions of this library
+
+Version 1.0, previously only available as dev-master, is still available by
+updating your composer.json to require version "~1.0".
+
+The `php5` branch will still work with PHP <= 5.6, but it will not have the
+latest features and, particularly, should not be used if you need encrypted
+storage.
 
 ## Contributing
 
@@ -195,3 +198,5 @@ Btw, we're hiring!
 ## License
 
 Please check LICENSE.md for full license information
+
+[ParagonIE/Halite]: <https://paragonie.com/project/halite> "Halite - Simple PHP Cryptography Library"

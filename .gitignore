@@ -2,6 +2,8 @@
 
 .DS_Store
 objectstorage.conf
+.php_cs.cache
+.phpunit.result.cache
 
 ### Eclipse ###
 *.pydevproject
