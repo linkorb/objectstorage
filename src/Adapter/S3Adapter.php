@@ -8,6 +8,7 @@ use InvalidArgumentException;
 class S3Adapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
     const DEFAULT_ACL = 'public-read';
+    const DEFAULT_API_VERSION = '2006-03-01';
 
     private $s3client = null;
     private $bucketname = null;
@@ -37,15 +38,29 @@ class S3Adapter implements BuildableAdapterInterface, StorageAdapterInterface
                 'Unable to build S3Adapter: missing "bucketname" from configuration.'
             );
         }
+        if (!array_key_exists('region', $config)
+            || '' === trim($config['region'])
+        ) {
+            throw new InvalidArgumentException(
+                'Unable to build S3Adapter: missing "region" from configuration.'
+            );
+        }
+        if (!array_key_exists('version', $config)) {
+            $config['version'] = self::DEFAULT_API_VERSION;
+        }
         $prefix = '';
         if (isset($config['prefix'])) {
             $prefix = trim($config['prefix']);
         }
 
-        $client = S3Client::factory(
+        $client = new S3Client(
             [
-                'key' => trim($config['access_key']),
-                'secret' => trim($config['secret_key']),
+                'credentials' => [
+                    'key' => trim($config['access_key']),
+                    'secret' => trim($config['secret_key']),
+                ],
+                'region' => trim($config['region']),
+                'version' => trim($config['version']),
             ]
         );
 
