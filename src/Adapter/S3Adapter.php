@@ -7,12 +7,12 @@ use InvalidArgumentException;
 
 class S3Adapter implements BuildableAdapterInterface, StorageAdapterInterface
 {
-    const DEFAULT_ACL = 'public-read';
+    const DEFAULT_ACL = 'private';
     const DEFAULT_API_VERSION = '2006-03-01';
 
     private $s3client = null;
     private $bucketname = null;
-    private $defaultacl = self::DEFAULT_ACL;
+    private $cannedAcl = self::DEFAULT_ACL;
     private $prefix = '';
 
     public static function build(array $config)
@@ -52,6 +52,10 @@ class S3Adapter implements BuildableAdapterInterface, StorageAdapterInterface
         if (isset($config['prefix'])) {
             $prefix = trim($config['prefix']);
         }
+        $cannedAcl = '';
+        if (isset($config['canned_acl_for_objects'])) {
+            $cannedAcl = trim($config['canned_acl_for_objects']);
+        }
 
         $client = new S3Client(
             [
@@ -64,14 +68,17 @@ class S3Adapter implements BuildableAdapterInterface, StorageAdapterInterface
             ]
         );
 
-        return new self($client, trim($config['bucketname']), $prefix);
+        return new self($client, trim($config['bucketname']), $prefix, $cannedAcl);
     }
 
-    public function __construct(S3Client $s3client, $bucketname, $prefix = '')
+    public function __construct(S3Client $s3client, $bucketname, $prefix = '', $cannedAcl = null)
     {
         $this->s3client = $s3client;
         $this->setBucketName($bucketname);
         $this->prefix = $prefix;
+        if (null !== $cannedAcl) {
+            $this->cannedAcl = $cannedAcl;
+        }
     }
 
     public function setS3Client(S3Client $s3client)
@@ -92,6 +99,11 @@ class S3Adapter implements BuildableAdapterInterface, StorageAdapterInterface
         $this->prefix = $prefix;
     }
 
+    public function setCannedAcl(string $cannedAcl)
+    {
+        $this->cannedAcl = $cannedAcl;
+    }
+
     public function setData($key, $data)
     {
         $this->s3client->putObject(
@@ -99,7 +111,7 @@ class S3Adapter implements BuildableAdapterInterface, StorageAdapterInterface
                 'Bucket' => $this->bucketname,
                 'Key' => $this->prefix . $key,
                 'Body' => $data,
-                'ACL' => $this->defaultacl,
+                'ACL' => $this->cannedAcl,
             ]
         );
     }
