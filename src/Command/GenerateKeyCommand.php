@@ -4,24 +4,31 @@ namespace ObjectStorage\Command;
 
 use ParagonIE\Halite\KeyFactory;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateKeyCommand extends Command
 {
     const ARG_PATH = 'path';
+    const OPT_SIGNING = 'signing';
 
     protected function configure()
     {
         $this->setName('genkey')
             ->setDescription(
-                'Generate a symmetric encryption key and write it to a file at the supplied path.  This command will not overwrite an existing file.'
+                'Generate a symmetric encryption or signing key and write it to a file at the supplied path.  This command will not overwrite an existing file.'
             )
             ->addArgument(
                 self::ARG_PATH,
                 InputArgument::REQUIRED,
                 'The path to which to save the key file.'
+            )
+            ->addOption(
+                self::OPT_SIGNING,
+                's',
+                InputOption::VALUE_NONE
             )
         ;
     }
@@ -36,10 +43,22 @@ class GenerateKeyCommand extends Command
             return 1;
         }
 
+        if (null !== $input->getOption(self::OPT_SIGNING)) {
+            if (true !== KeyFactory::save(KeyFactory::generateAuthenticationKey(), $path)) {
+                $output->writeln("I tried, but was unable to write the signing key to a file at \"{$path}\". I apologise!");
+
+                return 2;
+            }
+
+            return 0;
+        }
+
         if (true !== KeyFactory::save(KeyFactory::generateEncryptionKey(), $path)) {
-            $output->writeln("I tried, but was unable to write the key to a file at \"{$path}\". I apologise!");
+            $output->writeln("I tried, but was unable to write the encryption key to a file at \"{$path}\". I apologise!");
 
             return 2;
         }
+
+        return 0;
     }
 }

@@ -4,7 +4,6 @@ namespace ObjectStorage;
 
 use InvalidArgumentException;
 use RuntimeException;
-use ObjectStorage\Adapter\EncryptionAdapter;
 use ObjectStorage\Adapter\Bzip2Adapter;
 
 class Utils
@@ -50,11 +49,7 @@ class Utils
         $adapter = $adapterclassname::build($config[$adaptername]);
 
         if (isset($config['encryption'])) {
-            $key = (string) $config['encryption']['key'];
-            $iv = (string) $config['encryption']['iv'];
-
-            // Wrap the real adapter into the encryption adapter
-            $adapter = new EncryptionAdapter($adapter, $key, $iv);
+            throw new RuntimeException('It is no longer possible to configure encrypted storage from objectstore.conf.');
         }
 
         if (isset($config['bzip2'])) {
