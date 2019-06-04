@@ -19,6 +19,7 @@
         "symfony/console": "^4",
         "aws/aws-sdk-php": "^3",
         "friendsofphp/php-cs-fixer": "^2.15",
+        "phpstan/phpstan": "^0.11.8",
         "phpunit/phpunit": "^8.1"
     },
     "suggest": {
@@ -28,6 +29,11 @@
         "psr-4": {
             "ObjectStorage\\": "src/"
         } 
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ObjectStorage\\Test\\": "tests/"
+        }
     },
     "license": "MIT"
 }
