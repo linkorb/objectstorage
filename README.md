@@ -1,4 +1,4 @@
-# ObjectStorage 3.0 library
+# ObjectStorage 4.0 library
 
 ObjectStorage library for your cloud-based applications.
 
