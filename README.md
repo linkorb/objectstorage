@@ -85,7 +85,8 @@ etc) into the one of the encryption adapters. Here's an example
 ```php
 $adapter = new \ObjectStorage\Adapter\EncryptedStorageAdapter(
     new \ObjectStorage\Adapter\PdoAdapter($pdo),
-    \ParagonIE\Halite\KeyFactory::loadEncryptionKey($pathToKeyfile)
+    \ParagonIE\Halite\KeyFactory::loadAuthenticationKey($pathToSigningKey),
+    \ParagonIE\Halite\KeyFactory::loadEncryptionKey($pathToEncryptionKey)
 );
 // You can use $adapter as before and both the storage keys and objects will be
 // encrypted (use PlaintextKeyEncryptedStorageAdapter if you don't want the
@@ -94,10 +95,12 @@ $adapter = new \ObjectStorage\Adapter\EncryptedStorageAdapter(
 
 The encryption routines are provided by [ParagonIE/Halite][] and libsodium.
 
-Use the following command to generate an encryption key and save it to a file :-
+Use the following commands to generate and save a signing key and an encryption
+key as needed in the previous example:-
 
 ```sh
-./bin/objectstorage genkey /path/to/a/file
+./bin/objectstorage genkey --signing /path/to/a/file
+./bin/objectstorage genkey /path/to/another/file
 ```
 
 You can also use the included encrypt + decrypt commands.  In the following

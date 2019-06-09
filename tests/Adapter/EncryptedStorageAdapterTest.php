@@ -12,12 +12,14 @@ use PHPUnit\Framework\TestCase;
 
 class EncryptedStorageAdapterTest extends TestCase
 {
+    private $authenticationKey;
     private $encryptedStorageAdapter;
     private $encryptionKey;
     private $storageAdapter;
 
     protected function setUp(): void
     {
+        $this->authenticationKey = KeyFactory::generateAuthenticationKey();
         $this->encryptionKey = KeyFactory::generateEncryptionKey();
 
         $this->storageAdapter = $this->getMockBuilder(StorageAdapterInterface::class)
@@ -26,6 +28,7 @@ class EncryptedStorageAdapterTest extends TestCase
 
         $this->encryptedStorageAdapter = new EncryptedStorageAdapter(
             $this->storageAdapter,
+            $this->authenticationKey,
             $this->encryptionKey
         );
     }
@@ -37,7 +40,7 @@ class EncryptedStorageAdapterTest extends TestCase
             ->method('setData')
             ->with(
                 new LogicalNot('some-key'),
-                new LogicalNot('some-data')
+                new LogicalNot('some-keysome-data')
             )
         ;
 
@@ -50,7 +53,7 @@ class EncryptedStorageAdapterTest extends TestCase
             ->expects($this->once())
             ->method('getData')
             ->with(new LogicalNot('some-key'))
-            ->willReturn(Crypto::encrypt(new HiddenString('some-data'), $this->encryptionKey))
+            ->willReturn(Crypto::encrypt(new HiddenString('some-keysome-data'), $this->encryptionKey))
         ;
 
         $this->encryptedStorageAdapter->getData('some-key');

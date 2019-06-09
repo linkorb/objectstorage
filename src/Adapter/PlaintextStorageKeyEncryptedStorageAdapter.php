@@ -4,7 +4,9 @@ namespace ObjectStorage\Adapter;
 
 use ParagonIE\Halite\Alerts\CannotPerformOperation;
 use ParagonIE\Halite\Halite;
+use ParagonIE\Halite\KeyFactory;
 use ParagonIE\Halite\Symmetric\Crypto;
+use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 
 /**
@@ -12,8 +14,59 @@ use ParagonIE\HiddenString\HiddenString;
  *
  * Does not encrypt the keys by which data are stored.
  */
-class PlaintextStorageKeyEncryptedStorageAdapter extends EncryptedStorageAdapter
+class PlaintextStorageKeyEncryptedStorageAdapter extends AbstractEncryptedStorageAdapter implements StorageAdapterInterface
 {
+    public static function build(array $config)
+    {
+        if (!isset($config[self::CFG_STORAGE_ADAPTER])
+            || !$config[self::CFG_STORAGE_ADAPTER] instanceof StorageAdapterInterface
+        ) {
+            throw new \InvalidArgumentException(
+                'The build configuration for this storage adapter is missing an instance of StorageAdapterInterface, keyed as "'
+                    . self::CFG_STORAGE_ADAPTER
+                    . '"."'
+            );
+        }
+
+        if (isset($config[self::CFG_ENCRYPTION_KEY])) {
+            if (!$config[self::CFG_ENCRYPTION_KEY] instanceof EncryptionKey) {
+                throw new \InvalidArgumentException(
+                    '"' . self::CFG_ENCRYPTION_KEY . '"  must be an instance of EncryptionKey.'
+                );
+            }
+            $encryptionKey = $config[self::CFG_ENCRYPTION_KEY];
+        } elseif (isset($config[self::CFG_ENCRYPTION_KEY_PATH])) {
+            try {
+                $encryptionKey = KeyFactory::loadEncryptionKey($config[self::CFG_ENCRYPTION_KEY_PATH]);
+            } catch (CannotPerformOperation $e) {
+                throw new \InvalidArgumentException(
+                    '"' . self::CFG_ENCRYPTION_KEY_PATH . '"  must be a readable file.'
+                );
+            }
+        } else {
+            throw new \InvalidArgumentException(
+                'The build configuration for this storage adapter is missing an encryption key ("'
+                    . self::CFG_ENCRYPTION_KEY
+                    . '" or "'
+                    . self::CFG_ENCRYPTION_KEY_PATH
+                    . '").'
+            );
+        }
+
+        return new self(
+            $config[self::CFG_STORAGE_ADAPTER],
+            $encryptionKey
+        );
+    }
+
+    public function __construct(
+        StorageAdapterInterface $storageAdapter,
+        EncryptionKey $encryptionKey
+    ) {
+        $this->storageAdapter = $storageAdapter;
+        $this->encryptionKey = $encryptionKey;
+    }
+
     public function setData($key, $data)
     {
         try {
