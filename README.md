@@ -1,4 +1,4 @@
-# ObjectStorage 3.0 library
+# ObjectStorage 4.0 library
 
 ObjectStorage library for your cloud-based applications.
 
@@ -169,7 +169,7 @@ Then, add `linkorb/objectstorage` to your project's `composer.json`:
 ```json
 {
     "require": {
-        "linkorb/objectstorage": "^3.0"
+        "linkorb/objectstorage": "^4.0"
     }
 }
 ```
