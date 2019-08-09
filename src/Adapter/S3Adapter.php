@@ -2,6 +2,8 @@
 
 namespace ObjectStorage\Adapter;
 
+use Aws\Exception\AwsException;
+use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use InvalidArgumentException;
 
@@ -106,35 +108,53 @@ class S3Adapter implements BuildableAdapterInterface, StorageAdapterInterface
 
     public function setData($key, $data)
     {
-        $this->s3client->putObject(
-            [
-                'Bucket' => $this->bucketname,
-                'Key' => $this->prefix . $key,
-                'Body' => $data,
-                'ACL' => $this->cannedAcl,
-            ]
-        );
+        try {
+            $this->s3client->putObject(
+                [
+                    'Bucket' => $this->bucketname,
+                    'Key' => $this->prefix . $key,
+                    'Body' => $data,
+                    'ACL' => $this->cannedAcl,
+                ]
+            );
+        } catch (S3Exception $e) {
+            throw new AdapterException('Failed to store data because of an S3 error', null, $e);
+        } catch (AwsException $e) {
+            throw new AdapterException('Failed to store data because of an AWS error', null, $e);
+        }
     }
 
     public function getData($key)
     {
-        $result = $this->s3client->getObject(
-            [
-                'Bucket' => $this->bucketname,
-                'Key' => $this->prefix . $key,
-            ]
-        );
+        try {
+            $result = $this->s3client->getObject(
+                [
+                    'Bucket' => $this->bucketname,
+                    'Key' => $this->prefix . $key,
+                ]
+            );
+        } catch (S3Exception $e) {
+            throw new AdapterException('Failed to retrieve data because of an S3 error', null, $e);
+        } catch (AwsException $e) {
+            throw new AdapterException('Failed to retrieve data because of an AWS error', null, $e);
+        }
 
         return (string) $result['Body'];
     }
 
     public function deleteData($key)
     {
-        $this->s3client->deleteObject(
-            [
-                'Bucket' => $this->bucketname,
-                'Key' => $this->prefix . $key,
-            ]
-        );
+        try {
+            $this->s3client->deleteObject(
+                [
+                    'Bucket' => $this->bucketname,
+                    'Key' => $this->prefix . $key,
+                ]
+            );
+        } catch (S3Exception $e) {
+            throw new AdapterException('Failed to delete data because of an S3 error', null, $e);
+        } catch (AwsException $e) {
+            throw new AdapterException('Failed to delete data because of an AWS error', null, $e);
+        }
     }
 }
