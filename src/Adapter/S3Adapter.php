@@ -84,7 +84,6 @@ class S3Adapter implements StorageAdapterInterface
                 'Bucket' => $this->bucketname,
                 'Key' => $key,
                 'Body' => $data,
-                'ACL' => $this->defaultacl
             )
         );
     }
